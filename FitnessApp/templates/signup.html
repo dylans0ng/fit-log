@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block style %} 
+    .center {
+        text-align: center;
+    }
+
+    #sign-up-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        min-height: 100vh;
+        background-image: url('{{ url_for('static', filename='images/login-register-img.png') }}'); 
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: center;
+        background-attachment: scroll;
+    }
+
+    #signUpContainer {
+        border-radius: 15px;
+        background-color: #c3d6de;
+
+        margin: 25vh;
+        width: 60vh;
+        height: auto;
+
+        text-align: center;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #signUpContainer:hover {
+        transform: scale(1.01);
+        box-shadow: 0px 0px 10px;
+    }
+
+    .personalInfo {
+        display: flex;
+        flex-direction: row;
+        
+        gap: 5px;
+        margin: 20px;
+    }
+
+    #signUpForm input {
+        width: 50%;
+        height: 50%;
+        border-radius: 5px;
+        border: none;
+
+        padding: 10px;
+    }
+
+    #signUpForm button {
+        margin: 10px;
+    }
+{% endblock %}
+
+{% block content %}
+    <!-- This style will make the "sign-up-wrapper" div take up the WHOLE PAGE!!! -->
+    <div id="sign-up-wrapper" style="margin: 0px; padding: 0px; height: 100vh;">
+        <div id="signUpContainer" class="center">
+            <br>
+            <h1 class="center">Sign Up</h1>
+
+            <form method="POST" id="signUpForm">
+                <div class="personalInfo">
+                    <input type="text" name="firstName" placeholder="First Name" required><br><br>
+
+                    <input type="text" name="lastName" placeholder="Last Name" required><br><br>
+
+                    <input type="number" name="age" placeholder="Age" required><br><br>
+                </div>
+                
+                <input type="text" name="email" placeholder="Email Address" required><br><br>
+
+                <input type="password" name="psw" placeholder="Password" required><br><br>
+
+                <button class="btn btn-primary" type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

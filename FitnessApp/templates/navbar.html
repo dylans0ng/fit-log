@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    .topnav {
+      overflow: hidden;
+      background-color: #333;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .topnav a {
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+
+      text-decoration: none;
+      font-size: 17px;
+    }
+    
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    .topnav a.homeButton {
+      background-color: #634747;
+      color: white;
+    }
+
+    .topnav a.homeButton:hover {
+      background-color: white;
+      color: #634747;
+    }
+
+    #loggedIn {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .logoutButton {
+      background-color: rgb(247, 86, 86);
+      border-radius: 10px;
+
+      margin: 10px;
+
+      text-align: center;
+      color: #f2f2f2;
+      font-weight: bold;
+      font-size: 17px;
+
+      transition: all 0.3s ease-in-out;
+    }
+
+    .logoutButton:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 0px 10px black; 
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div class="topnav">
+    <a class="homeButton" href="/">FitLog</a>
+
+    <div id="loggedOut">
+      {% if not current_user.is_authenticated %}
+        <a href="/account">Account</a>
+      {% endif %}
+    </div>
+
+    <div id="loggedIn">
+      {% if current_user.is_authenticated %}
+        <a href="/log">Log</a>
+        <a href="/calendar">Calendar</a>
+      {% endif %}
+    </div>
+
+    {% if current_user.is_authenticated %}
+      <button class="logoutButton" onclick="window.location.href='{{ url_for('logout') }}'">Logout</button>
+    {% endif %}
+  </div>
+  </body>
+ </html>

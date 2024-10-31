@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+
+{% block title %}Progress Log{% endblock %}
+
+{% block style %}
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    #calendarPage {
+        min-height: 100vh;
+        background-image: url('{{ url_for('static', filename='images/calendar.png') }}'); 
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: center;
+        background-attachment: scroll;
+    }
+
+    .container {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+
+        width: 100%;
+        min-height: 100vh;
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .calendar {
+        width: 100%;
+        max-width: 600px;
+        padding: 30px 20px;
+        border-radius: 15px;
+        background-color: #c3d6de;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    .calendar:hover {
+        transform: scale(1.01);
+        box-shadow: 0px 0px 10px;
+    }
+
+    .calendar .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #ccc;
+    }
+
+    .calendar .header .month {
+        display: flex;
+        align-items: center;
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    .calendar .header .btns {
+        display: flex;
+        gap: 10px;
+    }
+
+    .calendar .header .btns .btn{
+        width: 50px;
+        height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+
+        color: #fff;
+        background-color: red;
+        font-size: 16px;
+        cursor: pointer;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    .calendar .header .btns .btn:hover{
+        background-color: #db0933;
+        transform: scale(1.05);
+    }
+
+    .weekdays {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .weekdays .day {
+        width: calc(100% / 7 - 10px);
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .days .day {
+        width: calc(100% / 7 - 10px);
+        height: 70px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 400;
+
+        background-color: #fff;
+
+        transition: all 0.3s;
+    }
+
+    .days .day:not(.next):not(.prev):hover {
+        color: #fff;
+        background-color: red;
+        transform: scale(1.05);
+    }
+
+    .days .day.today {
+        color: #fff;
+        background-color: red;
+    }
+
+    .days .day.next,
+    .days .day.prev {
+        color: #ccc;
+    }
+
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,
+    GRAD@20..48,100..700,0..1,-50..200">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+    <div id="calendarPage">
+        <div class="container">
+            <div class="calendar">
+                <div class="header">
+                    <div class="month"></div>
+                    <div class="btns">
+                        <div class="btn today-btn">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+
+                        <div class="btn prev-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+
+                        <div class="btn next-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="weekdays">
+                    <div class="day">Sun</div>
+                    <div class="day">Mon</div>
+                    <div class="day">Tues</div>
+                    <div class="day">Wed</div>
+                    <div class="day">Thurs</div>
+                    <div class="day">Fri</div>
+                    <div class="day">Sat</div>
+                </div>
+                <div class="days">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>  
+        const daysContainer = document.querySelector('.days'),
+            nextBtn = document.querySelector('.next-btn'),
+            prevBtn = document.querySelector('.prev-btn'),
+            month = document.querySelector('.month'),
+            todayBtn = document.querySelector('.today-btn');
+        
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        // Get current date
+        const date = new Date();
+
+        // Get current month
+        let currentMonth = date.getMonth();
+
+        // Get current year
+        let currentYear = date.getFullYear();
+
+        // Function to render the days
+        function renderCalendar() {
+            // Get previous month, current month, and next month days
+
+            date.setDate(1);
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const lastDayIndex = lastDay.getDay();
+            const lastDayDate = lastDay.getDate();
+            const prevLastDay = new Date(currentYear, currentMonth, 0);
+            const prevLastDayDate = prevLastDay.getDate();
+            const nextDays = 7 - lastDayIndex - 1;
+
+            // Update current year and month in the calendar header
+            month.innerHTML = `${months[currentMonth]} ${currentYear}`;
+
+            // Update the ".days" html
+            let days = "";
+
+            // Prev days html
+            for (let x = firstDay.getDay(); x > 0; x--) {
+                days += `<div class="day prev">${prevLastDayDate - x + 1}</div>`;
+            }
+
+            // Current month days
+            for (let i = 1; i <= lastDayDate; i++) {
+                // Check if it's today and then add today class
+                if (
+                    i === new Date().getDate() && 
+                    currentMonth === new Date().getMonth() && 
+                    currentYear === new Date().getFullYear() 
+                ) {
+                    // If date month year matches, then add TODAY
+                    days += `<div class="day today">${i}</div>`;
+                } else {
+                    // else, don't add today
+                    days += `<div class="day ">${i}</div>`;
+                }
+            }
+
+            // Next month days
+            for (let j = 1; j <= nextDays; j++) {
+                days += `<div class="day next">${j}</div>`
+            }
+
+            // Run this function with every calendar render
+            hideTodayBtn();
+
+            daysContainer.innerHTML = days;
+        }
+
+        renderCalendar();
+
+        daysContainer.addEventListener("click", (e) => {
+            const month_and_year = document.querySelector('.month');
+
+            // Prints out the date in the "Day Month Year" format
+            if (e.target.className == "day " || e.target.className == "day today") {
+                day_clicked = e.target.textContent;
+                month_clicked = month_and_year.textContent.split(' ')[0];
+                year_clicked = month_and_year.textContent.split(' ')[1];
+
+                if (day_clicked < 10) {
+                    day_clicked = '0' + day_clicked; // Add a zero if less than 10 so that it can be compared to the values in the "Exercise" table
+                }
+
+                var url = "{{ url_for('day_progress', day='DAY', month='MONTH', year='YEAR') }}"; // Calls the "day_progress" Python function
+
+                // Uses the JavaScript variables for the "day", "month", and "year" parameters
+                var full_url = url.replace('DAY', day_clicked).replace('MONTH', month_clicked).replace('YEAR', year_clicked); 
+
+                window.location.href = full_url; // Makes the URL match the route for the "day_progress" function
+            }
+        })
+
+        // Next month btn
+        nextBtn.addEventListener("click", () => {
+            // Increase current month by one
+            currentMonth++;
+            if (currentMonth > 11) {
+                // If current month gets greater than 11, make it 0 and increase year by one (remember the month indexing is from 0 to 11!!!)
+                currentMonth = 0;
+                currentYear++;
+            }
+
+            // Rerender calendar
+            renderCalendar();
+
+            const month_name = document.querySelector('.month');
+        });
+
+        // Prev month btn 
+        prevBtn.addEventListener("click", () => {
+            // Decrease current month by one
+            currentMonth--;
+
+            // Check if less than 0 then make it 11 and decrease year
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+
+            // Rerender calendar
+            renderCalendar();
+        });
+
+        // Go to today
+        todayBtn.addEventListener("click", () => {
+            // Set month and year to current 
+            currentMonth = date.getMonth();
+            currentYear = date.getFullYear();
+
+            // Rerender calendar
+            renderCalendar();
+        });
+
+        // Hide today btn if it's already current month and vice versa
+        function hideTodayBtn() {
+            if (
+                currentMonth === new Date().getMonth() &&
+                currentYear === new Date().getFullYear()
+            ) {
+                todayBtn.style.display = "none";
+            } else {
+                todayBtn.style.display = "flex";
+            }
+        }
+        
+        
+    </script>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Fitness App{% endblock %}
+
+{% block style %}
+    .center {
+        text-align: center;
+    }
+
+    #homePage {
+        background-image: url('{{ url_for('static', filename='images/gym.png') }}'); 
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #welcomeContainer {
+        border-radius: 15px;
+        background-color: #634747;
+
+        padding: 10px;
+        width: 55vh;
+        height: auto;
+
+        text-align: center;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #welcomeContainer:hover {
+        transform: scale(1.01);
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5); 
+    }
+
+    #welcomeMessage {
+        color: white;
+    }
+
+    .welcomeFitLog{
+        font-size: 40px;
+        text-shadow: 0px 0px 10px black;
+    }
+
+    #infoFitLog {
+        color: black;
+        font-size: 25px;
+        font-weight: 1000;
+
+        text-shadow: 0px 0px 3px white;
+    }
+
+    #homeButton {
+        border-radius: 15px;
+        padding: 5px;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #homeButton:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 0px 10px black; 
+    }
+ 
+    #homeLogButton {
+        border-radius: 15px;
+        border: none;
+        padding: 5px;
+        margin: 10px;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #homeLogButton:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 0px 10px black; 
+    }
+
+    #homeCalendarButton {
+        border-radius: 15px;
+        border: none;
+        padding: 5px;
+        margin: 10px;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #homeCalendarButton:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 0px 10px black; 
+    }
+{% endblock %}
+
+{% block content %}
+    <!-- This style will make the "homePage" div take up the WHOLE PAGE!!! -->
+    <div id="homePage" style="margin: 0px; padding: 0px; height: 100vh;"> 
+        <div id="welcomeContainer">
+            <div id="welcomeMessage">
+                <!-- Prints out the user's first and last name if logged in -->
+                {% if current_user.is_authenticated %}
+                    <h3 class="center; welcomeFitLog">Welcome {{ current_user.first_name }} {{ current_user.last_name }}!</h3>
+                    <button type="button" id="homeLogButton" onclick="window.location.href='{{ url_for('log') }}'">Log My Workout</button>
+                    <button type="button" id="homeCalendarButton" onclick="window.location.href='{{ url_for('calendar') }}'">View My Calendar</button>
+                {% else %}
+                    <p class="center; welcomeFitLog">Welcome to FitLog!<p>
+                    <p class="center" id="infoFitLog">Sign in to have full access to our gym tracker.</p>
+                    <button type="button" id="homeButton" onclick="window.location.href='{{ url_for('account') }}'">Sign In!</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Fitness App{% endblock %}
+
+{% block style %} 
+
+    .center {
+        text-align: center;
+    }
+
+    #account-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        min-height: 100vh;
+        background-image: url('{{ url_for('static', filename='images/login-register-img.png') }}'); 
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: center;
+        background-attachment: scroll;
+    }
+
+    #accountContainer {
+        border-radius: 15px;
+        background-color: #c3d6de;
+
+        margin: 25vh;
+        width: 60vh;
+        height: auto;
+
+        transition: all 0.3s ease-in-out;
+    }
+
+    #accountContainer:hover {
+        transform: scale(1.01);
+        box-shadow: 0px 0px 10px;
+    }
+
+    #login input {
+        width: 50%;
+        height: 50%;
+        border-radius: 5px;
+        border: none;
+
+        padding: 10px;
+    }
+
+    .flash-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .flash-message {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .flash-message.danger {
+        background-color: red;
+        text-align: center;
+    }
+
+{% endblock %}
+
+{% block content %}
+    <div id="account-content-wrapper">
+        <div id="accountContainer">
+            <br>
+            <h1 class="center">Login</h1><br>
+
+            <div id="login" class="center">
+                <form method="POST" id="accountForm" action="/account">
+                    <input type="text" name="email" placeholder="Email Address" required><br><br>
+
+                    <input type="password" name="psw" placeholder="Password" required><br><br>
+
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </form>
+            </div>
+
+            <div id="transitionToRegister" class="center">
+                <br>
+                <label for="registration">Don't have an email with us? Register</label>
+                <a href="/signup" name="registration">here</a><label for="registration">!</label>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-container">
+                            <div class="flash-message {{ category }}">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div id="signUp">
+                <form method="POST">
+                    <label></label>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
